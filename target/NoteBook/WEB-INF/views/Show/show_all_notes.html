@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Show all notes</title>
+</head>
+<body>
+<strong>List notes</strong>
+<hr>
+<br>
+<table>
+    <tr>
+        <td>id</td>
+        <td>Date</td>
+        <td>Topic</td>
+        <td>Link</td>
+        <td>Delete</td>
+        <td>Text</td>
+    </tr>
+    <tr th:each="note:${AllNotes}">
+        <td th:text="${note.id}"></td>
+<!--changeThisDateInString метод в Note - меняет формат выдачи даты(отсекает часы и мунуты)      -->
+        <td th:text="${note.changeThisDateInString}"></td>
+
+        <td>
+            <table>
+                <tr th:each="topic:${note.topics}">
+                    <td th:text=" ${topic}"></td>
+                </tr>
+            </table>
+        </td>
+
+        <td><a th:href="@{/note/{id}(id=${note.getId()})}" th:text="${Link}"></a></td>
+        <td><a th:href="@{/note/remove/{id}(id=${note.getId()})}" th:text="${DeleteThisNote}"></a></td>
+        <td th:text="${note.myText}"></td>
+    </tr>
+</table>
+<hr>
+<a href="/"><strong>Notebook's menu</strong></a>
+</body>
+</html>

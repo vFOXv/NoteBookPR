@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>New note</title>
+</head>
+<body>
+<p><strong>Here you can write a new note:)</strong></p>
+<hr>
+
+<form method="POST" action="#" th:action="@{/note/newNote}" th:object="${NewNote}">
+
+    <p th:text="${Today}"></p>
+
+    <div>To select multiple topics, hold down the key CTRL</div>
+
+<!--  создание списка для выбора темы(topic) - в данном случае возможно выбор нескольких тем для одной записи-->
+<!--    <select id="multiple-topics" th:field="*{topics}" multiple="multiple">-->
+<!--        <option th:each="topic:${NewNote.topics}" th:value="${topic}" th:text="${topic.name}">-->
+<!--    </select>-->
+<!--    </p>-->
+    <br>
+
+
+
+
+<!--        чекбоксы для выбора тем заметок-->
+        <table>
+    <tr th:each="topic:${NewNote.topics}">
+        <td><input type="checkbox"  th:value="${topic}" />
+        <label th:text="${topic}"> </label>
+        </td>
+    </tr>
+</table>
+
+<!--        создание поля для ввода текста заметки-->
+    <p>Text new note<br>
+    <textarea type="text" th:field="*{myText}" cols = "40" rows="3"></textarea> </p>
+
+
+
+    <input type="submit" value="ADD NOTE"/>
+    <input type="reset" value="Clean">
+</form>
+</body>
+</html>

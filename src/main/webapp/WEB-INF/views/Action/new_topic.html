@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>New topic</title>
+</head>
+<body>
+<p>This page for create new topics</p>
+<form action="#" th:action="@{/note/newTopicAdd}" th:object="${newTopic}" th:method="post">
+<p>Name topic:<input type="text" th:field="*{name}" th:value="*{name}"/></p>
+    <p><input type="submit" value="ADD TOPIC"></p>
+
+</form>
+</body>
+</html>
