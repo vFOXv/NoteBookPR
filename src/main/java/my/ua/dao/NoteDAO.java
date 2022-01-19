@@ -60,7 +60,7 @@ public class NoteDAO {
         }
     }
 
-    //получение записи по id
+    //получение записи(note) по id
     public Note getNoteToId(Long id) {
         session = mySessionFactory.createSession();
         List<Note> notes = new ArrayList<>();
@@ -79,6 +79,24 @@ public class NoteDAO {
         return notes.get(0);
     }
 
+    //получение темы(topic) по id
+    public Topic getTopicToId(Long id) {
+        session = mySessionFactory.createSession();
+        List<Topic> topics = new ArrayList<>();
+        try {
+            Query query = session.createQuery("FROM Topic T WHERE T.id=:paramName");
+            query.setParameter("paramName", id);
+            topics = query.list();
+        } catch (HibernateException he) {
+            System.out.println("Error getting note: " + he);
+            he.printStackTrace();
+        } finally {
+            if (session.isOpen()) {
+                session.close();
+            }
+        }
+        return topics.get(0);
+    }
     //удаление записи из дневника
     public void deleteNote(Long id) {
 //        int result = 0;
@@ -126,7 +144,7 @@ public class NoteDAO {
         return new Date();
     }
 
-    //запись новой заметки в DB
+    //запись новой заметки(note) в DB
     public void addNewNoteDAO(Note note) {
         session = mySessionFactory.createSession();
         Transaction transaction = null;
@@ -165,4 +183,6 @@ public class NoteDAO {
             }
         }
     }
+
+
 }

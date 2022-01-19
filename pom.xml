@@ -109,6 +109,7 @@
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/ognl/ognl -->
+    <!--  для запуска SessionFactory  -->
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>

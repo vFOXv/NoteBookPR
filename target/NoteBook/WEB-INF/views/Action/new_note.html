@@ -19,7 +19,7 @@
 <!--        <option th:each="topic:${NewNote.topics}" th:value="${topic}" th:text="${topic.name}">-->
 <!--    </select>-->
 <!--    </p>-->
-    <br>
+<!--    <br>-->
 
 
 
@@ -27,11 +27,12 @@
 <!--        чекбоксы для выбора тем заметок-->
         <table>
     <tr th:each="topic:${NewNote.topics}">
-        <td><input type="checkbox"  th:value="${topic}" >
+        <td><input type="checkbox" th:field="*{topics}" th:value="${topic.id}" />
         <label th:text="${topic}"> </label>
         </td>
     </tr>
 </table>
+
 
 <!--        создание поля для ввода текста заметки-->
     <p>Text new note<br>

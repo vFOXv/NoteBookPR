@@ -1,5 +1,7 @@
 package my.ua.model;
 
+import jakarta.validation.groups.ConvertGroup;
+
 import javax.persistence.*;
 
 
