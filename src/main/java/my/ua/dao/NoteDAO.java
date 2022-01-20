@@ -97,7 +97,8 @@ public class NoteDAO {
         }
         return topics.get(0);
     }
-    //удаление записи из дневника
+
+    //удаление записи(note) из дневника(DB)
     public void deleteNote(Long id) {
 //        int result = 0;
 //        session = mySessionFactory.createSession();
@@ -139,6 +140,25 @@ public class NoteDAO {
         }
     }
 
+    //удаление темы(topic) из DB
+    public int deleteTopicDAO(Long id) {
+        int result = 0;
+        session = mySessionFactory.createSession();
+        try {
+            Query query = session.createQuery("DELETE Topic T WHERE T.id=:paramName");
+            query.setParameter("paramName", id);
+            //обновляет поля и возвращает кол-во обновленных полей
+            result = query.executeUpdate();
+        } catch (HibernateException he) {
+            System.out.println(he.getMessage());
+        } finally {
+            if (session.isOpen()) {
+                session.close();
+            }
+        }
+        return result;
+    }
+
     //получение текущей даты.
     public Date getTodayDate() {
         return new Date();
@@ -164,25 +184,52 @@ public class NoteDAO {
         }
     }
 
-    //запись новой темы в DB
-    public void addNewTopicDAO(Topic topic) {
+    //проверка уникальности имени темы(topic)
+    public boolean uniqueNameTopicDAO(String newName) {
+        boolean unique = false;
         session = mySessionFactory.createSession();
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
-            session.save(topic);
-            transaction.commit();
+            Query query = session.createQuery("FROM Topic T WHERE name= :paramName");
+            query.setParameter("paramName", newName);
+            List<Topic> topics = query.list();
+            if (topics.isEmpty()) {
+                unique = true;
+            } else {
+                System.err.println("This topic already exists!!!");
+            }
         } catch (HibernateException he) {
             System.out.println(he.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
         } finally {
             if (session.isOpen()) {
                 session.close();
             }
         }
+        return unique;
     }
 
+    //запись новой темы в DB
+    public void addNewTopicDAO(Topic topic) {
+        //проверяеться уникальность темы и если она уникальна, то происходит ее запись в DB
+        boolean unique = uniqueNameTopicDAO(topic.getName());
+        if (unique) {
+            session = mySessionFactory.createSession();
+            Transaction transaction = null;
+
+            try {
+                transaction = session.beginTransaction();
+                session.save(topic);
+                transaction.commit();
+            } catch (HibernateException he) {
+                System.out.println(he.getMessage());
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+            } finally {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            }
+        }
+    }
 
 }

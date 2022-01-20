@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete topic</title>
+</head>
+<body>
+
+<div><strong>Chose topic for delete</strong></div>
+
+<form method="post" th:action="@{/note/deleteTopic}" th:object="${AllTopics}">
+    <select>
+        <option th:each="topic:${AllTopics}"
+
+                th:value="${topic.id}"
+                th:text="${topic.name}"></option>
+    </select>
+    <div><input type="submit" value="DELETE"></div>
+</form>
+<!--th:field="*{topic}"  в строку 14 но это объект а не поле  ??????????????????-->
+<hr>
+<br>
+<a href="/"><strong>Notebook's menu</strong></a>
+</body>
+</html>

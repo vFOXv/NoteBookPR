@@ -48,7 +48,6 @@ public class ActionController {
     @PostMapping("/newNote")
     public String addNewNote(@ModelAttribute Note newNote) {
         newNote.setThisDate(noteDAO.getTodayDate());
-        System.out.println("----------------------->/note/done" + "/n" + newNote);
         noteDAO.addNewNoteDAO(newNote);
         System.out.println(newNote);
         return "redirect:/show/all";
@@ -57,14 +56,30 @@ public class ActionController {
     //преход на страницу HTML для создания новой topic
     @GetMapping("/newTopic")
     public String newTopic(Model model) {
-        model.addAttribute("newTopic",new Topic());
+        model.addAttribute("newTopic", new Topic());
         return "Action/new_topic";
     }
 
     //получение данных с HTML и запись новой темы в DB
     @PostMapping("/newTopicAdd")
-    public String addNewTopic(@ModelAttribute Topic newTopic){
+    public String addNewTopic(@ModelAttribute Topic newTopic) {
         noteDAO.addNewTopicDAO(newTopic);
         return "Start/menu_notebook";
+    }
+
+    //преход на страницу HTML для удаления темы(topic)
+    @GetMapping("/deleteTopic")
+    public String deleteTopicHTML(Model model) {
+        model.addAttribute("AllTopics", noteDAO.getAllTopics());
+        return "Action/delete_topic";
+    }
+
+    //получение данных с HTML и удаление темы(topic) из DB
+    @PostMapping("/deleteTopic")
+    public String deleteTopicDB(@ModelAttribute Topic topic) {
+        System.out.println("----------------------------->"+topic.toString());
+        Long id = topic.getId();
+        noteDAO.deleteTopicDAO(id);
+        return "redirect:/note/new";
     }
 }

@@ -30,6 +30,7 @@ public class SpringConfig implements WebMvcConfigurer {
         this.stringLongConverter = stringLongConverter;
     }
 
+    //метод необходим для работы converter
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(stringLongConverter);
