@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class StartController {
-    public final NoteDAO noteDAO;
+    private final NoteDAO noteDAO;
 
     public StartController(NoteDAO noteDAO) {
         this.noteDAO = noteDAO;

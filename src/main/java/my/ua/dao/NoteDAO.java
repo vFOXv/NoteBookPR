@@ -100,21 +100,6 @@ public class NoteDAO {
 
     //удаление записи(note) из дневника(DB)
     public void deleteNote(Long id) {
-//        int result = 0;
-//        session = mySessionFactory.createSession();
-//        try {
-//            Query query = session.createQuery("DELETE Note N WHERE N.id =:paramName");
-//            query.setParameter("paramName", id);
-        //обновляет поля и возвращает кол-во обновленных полей
-//            result = query.executeUpdate();
-//        } catch (HibernateException he) {
-//            System.out.println(he.getMessage());
-//        } finally {
-//            if (session.isOpen()) {
-//                session.close();
-//            }
-//        }
-//        return result;
 
         Note note = null;
         session = mySessionFactory.createSession();
@@ -141,22 +126,43 @@ public class NoteDAO {
     }
 
     //удаление темы(topic) из DB
-    public int deleteTopicDAO(Long id) {
-        int result = 0;
+    public void deleteTopicDAO(Long id) {
+        Topic topic = null;
         session = mySessionFactory.createSession();
         try {
-            Query query = session.createQuery("DELETE Topic T WHERE T.id=:paramName");
-            query.setParameter("paramName", id);
-            //обновляет поля и возвращает кол-во обновленных полей
-            result = query.executeUpdate();
+            topic = (Topic) session.get(Topic.class, id);
         } catch (HibernateException he) {
             System.out.println(he.getMessage());
+        }
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            session.delete(topic);
+            transaction.commit();
+        } catch (HibernateException he) {
+            System.out.println(he.getMessage());
+            if (transaction != null) {
+                transaction.rollback();
+            }
         } finally {
             if (session.isOpen()) {
                 session.close();
             }
         }
-        return result;
+//        int result = 0;
+//        session = mySessionFactory.createSession();
+//        try {
+//            Query query = session.createQuery("DELETE Topic T WHERE T.id=:paramName");
+//            query.setParameter("paramName", id);
+//            //обновляет поля и возвращает кол-во обновленных полей
+//            result = query.executeUpdate();
+//        } catch (HibernateException he) {
+//            System.out.println(he.getMessage());
+//        } finally {
+//            if (session.isOpen()) {
+//                session.close();
+//            }
+//        }
     }
 
     //получение текущей даты.
@@ -232,4 +238,68 @@ public class NoteDAO {
         }
     }
 
+    //изменения данных в заметке(note)
+    public void updateNote(Note note) {
+        Transaction transaction = null;
+        //установка даты в переданный объект из старой, еще не измененой записи
+        note.setThisDate(getNoteToId(note.getId()).getThisDate());
+
+        try {
+            session = mySessionFactory.createSession();
+        } catch (HibernateException ex) {
+            session = mySessionFactory.createSession();
+        }
+
+        try {
+            transaction = session.beginTransaction();
+            session.merge(note);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session.isOpen()) {
+                session.close();
+            }
+        }
+    }
+
+    //поиск заметок по темам
+    //listSearchTopics - список выбраных тем по которым выбираються записи(notes)
+    public List<Note> searchToTopic(List<Topic> listSearchTopics) {
+
+        //список всех записей (из него будут удаляться лишнии записи в ходе сортировки)
+        //в итоге остануться только записи с упоминанием тем поиска
+        List<Note> rightNotes = getAllNotes();
+
+        //пребор заметок
+        for (int rn = 0; rn < rightNotes.size(); rn++) {
+            //перебор тем в заметках
+            Note note = (Note) rightNotes.get(rn);
+            //перемменая - счетчик, увеличиваеться с каждой найденной темой по которым ищут заметку
+            int flag = 0;
+            for (int nt = 0; nt < note.getTopics().size(); nt++) {
+                //перебор совпадений тем в заметке и тем в поиске
+                //если хотя бы одна темы нее в заметке, то эта заметка удаляеться из списка
+                for (int lst = 0; lst < listSearchTopics.size(); lst++) {
+                    if ((listSearchTopics.get(lst).getId()) == (note.getTopics().get(nt).getId())) {
+                        //при совпадении темы задоной в поиске и темы в note переменная flag увеличиваеться на 1
+                        flag++;
+                    }
+                    //при условии: колличество совпадающих тем в note меньше чем задано в поиске  flag < listSearchTopics.size()
+                    //и кол-во итераций в цикле перебора заметок(2-й цикл) по темам note = длинне List  nt == note.getTopics().size()-1 (т.е проверенны все темы)
+                    //и кол-во итераций в цикле перебора тем поска(3-цикл) = длинне List lst == listSearchTopics.size() - 1
+                    //то удаляем note и уменьшаем итеррационную переменную(rn) на 1, т.к. длина List rightNotes уменьшилась.
+                    if (flag < listSearchTopics.size() && nt == note.getTopics().size() - 1 && lst == listSearchTopics.size() - 1) {
+                        rightNotes.remove(rn);
+                        rn--;
+                    }
+
+                }
+            }
+        }
+        return rightNotes;
+    }
+
 }
+
+

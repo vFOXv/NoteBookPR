@@ -19,7 +19,7 @@
     </tr>
     <tr th:each="note:${AllNotes}">
         <td th:text="${note.id}"></td>
-<!--changeThisDateInString метод в Note - меняет формат выдачи даты(отсекает часы и мунуты)      -->
+<!--changeThisDateInString метод в Note - меняет формат выдачи даты(отсекает часы и мунуты) -->
         <td th:text="${note.changeThisDateInString}"></td>
 
         <td>

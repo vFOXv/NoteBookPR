@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Search to date</title>
+</head>
+<body>
+<p><strong>Search date when note was write</strong></p>
+<hr>
+<form th:action="@{/search/date}" th:object="${ListNotes}" method="post">
+<select id="note_date" name="note_date">
+<option th:each="note:${ListNotes}"
+        th:value="${note.id}"
+        th:text="${note.changeThisDateInString}">Option</option>
+</select>
+<input type="submit" value="SEARCH">
+</form>
+<hr>
+<br>
+<a href="/"><strong>Notebook's menu</strong></a>
+</body>
+</html>

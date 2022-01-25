@@ -5,7 +5,8 @@
     <title>New topic</title>
 </head>
 <body>
-<p>This page for create new topics</p>
+<p><strong>This page for create new topics</strong></p>
+<hr>
 <form action="#" th:action="@{/note/newTopicAdd}" th:object="${newTopic}" th:method="post">
 <p>Name topic:<input type="text" th:field="*{name}" th:value="*{name}"/></p>
     <p><input type="submit" value="ADD TOPIC"></p>

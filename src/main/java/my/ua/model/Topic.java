@@ -2,6 +2,7 @@ package my.ua.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
@@ -43,6 +44,7 @@ public class Topic {
     public void setNotes(List<Note> notes) {
         this.notes = notes;
     }
+
 
     @Override
     public String toString() {

@@ -12,17 +12,26 @@ import java.sql.SQLException;
 @Controller
 @RequestMapping("/note")
 public class ActionController {
-    public final NoteDAO noteDAO;
+    private final NoteDAO noteDAO;
 
     public ActionController(NoteDAO noteDAO) {
         this.noteDAO = noteDAO;
     }
 
-    //показвает конкретную запись в дневнике
+    //показвает конкретную запись в дневнике для просмотра и редакции
     @GetMapping("/{id}")
     public String showThisNote(@PathVariable("id") Long id, Model model) throws SQLException, ClassNotFoundException {
         model.addAttribute("thisNote", noteDAO.getNoteToId(id));
         return "Action/this_note";
+    }
+
+    //получает данные с формы конкретной запаиси и позволяет ее редактировать
+    @PostMapping("/update/{id}")
+    public String updateNote(@ModelAttribute Note note){
+
+        noteDAO.updateNote(note);
+        System.out.println(note);
+        return "redirect:/show/all";
     }
 
     //удаляет конкретную запись в дневнике
@@ -63,6 +72,7 @@ public class ActionController {
     //получение данных с HTML и запись новой темы в DB
     @PostMapping("/newTopicAdd")
     public String addNewTopic(@ModelAttribute Topic newTopic) {
+        System.out.println("NewTopic--------------->Show--------->"+newTopic);
         noteDAO.addNewTopicDAO(newTopic);
         return "Start/menu_notebook";
     }
@@ -76,9 +86,8 @@ public class ActionController {
 
     //получение данных с HTML и удаление темы(topic) из DB
     @PostMapping("/deleteTopic")
-    public String deleteTopicDB(@ModelAttribute Topic topic) {
-        System.out.println("----------------------------->"+topic.toString());
-        Long id = topic.getId();
+    public String deleteTopicDB(@RequestParam("topic_name") String name_id) {
+        Long id = Long.parseLong(name_id);
         noteDAO.deleteTopicDAO(id);
         return "redirect:/note/new";
     }

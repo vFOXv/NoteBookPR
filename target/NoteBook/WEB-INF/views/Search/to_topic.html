@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Search to topics</title>
+</head>
+<body>
+<p><strong>Select topics for search notes.</strong></p>
+<hr>
+
+<form th:action="@{/search/toTopic}" th:object="${ListTopicsInNote}" method="post">
+    <!--        чекбоксы для выбора тем заметок-->
+    <table>
+        <tr th:each="topic:${ListTopicsInNote.topics}">
+            <!--   для работы converter необходимо наличее  th:field="*{topics}" в теге  input type="checkbox"-->
+            <td><input type="checkbox" th:field="*{topics}" th:value="${topic.id}" />
+                <label th:text="${topic}"> </label>
+            </td>
+        </tr>
+    </table>
+    <input type="submit" value="SEARCH"/>
+</form>
+<hr>
+<br>
+<a href="/"><strong>Notebook's menu</strong></a>
+</body>
+</html>

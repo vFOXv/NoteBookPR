@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Delete topic</title>
@@ -7,17 +7,17 @@
 <body>
 
 <div><strong>Chose topic for delete</strong></div>
+<hr>
 
 <form method="post" th:action="@{/note/deleteTopic}" th:object="${AllTopics}">
-    <select>
+    <select id="topic_name" name="topic_name">
         <option th:each="topic:${AllTopics}"
-
                 th:value="${topic.id}"
                 th:text="${topic.name}"></option>
     </select>
     <div><input type="submit" value="DELETE"></div>
 </form>
-                   <!--th:field="*{topic}"      ??????????????????-->
+
 <hr>
 <br>
 <a href="/"><strong>Notebook's menu</strong></a>

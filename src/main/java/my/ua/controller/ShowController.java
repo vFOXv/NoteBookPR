@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/show")
 public class ShowController {
-    public final NoteDAO noteDAO;
+    private final NoteDAO noteDAO;
 
     public ShowController(NoteDAO noteDAO) {
         this.noteDAO = noteDAO;
