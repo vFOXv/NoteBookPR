@@ -36,7 +36,11 @@
         </tr>
         <tr>
             <td>Text</td>
-            <td><textarea type="text" th:field="*{myText}" cols = "40" rows="3"></textarea> </td>
+            <td><label>
+                <textarea type="text" th:field="*{myText}" cols = "40" rows="3"></textarea>
+            </label>
+                <div style="color:red" th:if="${#fields.hasErrors('myText')}" th:errors="*{myText}">Name Error</div>
+            </td>
         </tr>
     </table>
     <input type ="submit" value="Update">

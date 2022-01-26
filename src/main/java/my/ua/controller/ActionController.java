@@ -1,12 +1,15 @@
 package my.ua.controller;
 
+
 import my.ua.dao.NoteDAO;
 import my.ua.model.Note;
 import my.ua.model.Topic;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.sql.SQLException;
 
 @Controller
@@ -21,16 +24,32 @@ public class ActionController {
     //показвает конкретную запись в дневнике для просмотра и редакции
     @GetMapping("/{id}")
     public String showThisNote(@PathVariable("id") Long id, Model model) throws SQLException, ClassNotFoundException {
-        model.addAttribute("thisNote", noteDAO.getNoteToId(id));
+//        note.setId(noteDAO.getNoteToId(id).getId());
+//        note.setThisDate(noteDAO.getNoteToId(id).getThisDate());
+//        note.setThisDate(noteDAO.getNoteToId(id).getThisDate());
+//        note.setTopics(noteDAO.getNoteToId(id).getTopics());
+//        note.setMyText(noteDAO.getNoteToId(id).getMyText());
+
+        model.addAttribute("thisNote",noteDAO.getNoteToId(id));
+
         return "Action/this_note";
     }
 
-    //получает данные с формы конкретной запаиси и позволяет ее редактировать
+    //получает данные с формы конкретной записи и позволяет ее редактировать
     @PostMapping("/update/{id}")
-    public String updateNote(@ModelAttribute Note note){
+    public String updateNote(@ModelAttribute("thisNote") @Valid Note note, BindingResult bindingResult){
+        //добавление в объект даты, т.к. она не передаеться из HTML
+        Long id = note.getId();
+        note.setThisDate(noteDAO.getNoteToId(id).getThisDate());
+        System.out.println("VALID--------------->"+note);
+
+        if (bindingResult.hasErrors()) {
+            return "Action/this_note";
+        }
 
         noteDAO.updateNote(note);
         System.out.println(note);
+
         return "redirect:/show/all";
     }
 
@@ -55,7 +74,7 @@ public class ActionController {
 
     //получение данных с HTML и запись новой заметки в DB
     @PostMapping("/newNote")
-    public String addNewNote(@ModelAttribute Note newNote) {
+    public String addNewNote(@ModelAttribute("NewNote") Note newNote) {
         newNote.setThisDate(noteDAO.getTodayDate());
         noteDAO.addNewNoteDAO(newNote);
         System.out.println(newNote);
@@ -63,16 +82,21 @@ public class ActionController {
     }
 
     //преход на страницу HTML для создания новой topic
-    @GetMapping("/newTopic")
-    public String newTopic(Model model) {
-        model.addAttribute("newTopic", new Topic());
+    @GetMapping("/newTopic")    public String newTopic(@ModelAttribute("newTopic") Topic topic) {
+
         return "Action/new_topic";
     }
 
     //получение данных с HTML и запись новой темы в DB
     @PostMapping("/newTopicAdd")
-    public String addNewTopic(@ModelAttribute Topic newTopic) {
+    public String addNewTopic(@ModelAttribute("newTopic") @Valid Topic newTopic,
+                              BindingResult bindingResult) {
         System.out.println("NewTopic--------------->Show--------->"+newTopic);
+
+        if (bindingResult.hasErrors()) {
+            return "Action/new_topic";
+        }
+
         noteDAO.addNewTopicDAO(newTopic);
         return "Start/menu_notebook";
     }

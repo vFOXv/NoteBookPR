@@ -1,6 +1,7 @@
 package my.ua.controller;
 
 
+
 import my.ua.dao.NoteDAO;
 import my.ua.model.Note;
 import my.ua.model.Topic;
@@ -45,7 +46,8 @@ public class SearchController {
 
     //получени данных с HTML и поиск заметок по темам
     @PostMapping("/toTopic")
-    public String searchToTopic(@ModelAttribute Note note, Model model){
+    public String searchToTopic(@ModelAttribute Note note,
+                                Model model){
         //получаем с HTML объект note со списком выбраных тем
         List <Topic> listTopics = note.getTopics();
         System.out.println("Поиск по темам---------------->"+listTopics);

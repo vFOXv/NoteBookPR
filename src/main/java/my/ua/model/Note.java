@@ -1,8 +1,10 @@
 package my.ua.model;
 
-import jakarta.validation.groups.ConvertGroup;
+
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 
 import java.text.SimpleDateFormat;
@@ -26,6 +28,8 @@ public class Note {
     private List<Topic> topics;
 
     @Column(name = "my_text")
+    @NotEmpty(message = "Name should not be empty!!!")
+    @Size(min = 1, max = 255, message = "Name should be between 1 and 255 characters!!!")
     private String myText;
 
     public Note() {    }
