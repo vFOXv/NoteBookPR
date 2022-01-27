@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -149,20 +150,6 @@ public class NoteDAO {
                 session.close();
             }
         }
-//        int result = 0;
-//        session = mySessionFactory.createSession();
-//        try {
-//            Query query = session.createQuery("DELETE Topic T WHERE T.id=:paramName");
-//            query.setParameter("paramName", id);
-//            //обновляет поля и возвращает кол-во обновленных полей
-//            result = query.executeUpdate();
-//        } catch (HibernateException he) {
-//            System.out.println(he.getMessage());
-//        } finally {
-//            if (session.isOpen()) {
-//                session.close();
-//            }
-//        }
     }
 
     //получение текущей даты.
@@ -254,8 +241,8 @@ public class NoteDAO {
             transaction = session.beginTransaction();
             session.merge(note);
             transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (HibernateException he) {
+            System.out.println(he.getMessage());
         } finally {
             if (session.isOpen()) {
                 session.close();
@@ -270,6 +257,13 @@ public class NoteDAO {
         //список всех записей (из него будут удаляться лишнии записи в ходе сортировки)
         //в итоге остануться только записи с упоминанием тем поиска
         List<Note> rightNotes = getAllNotes();
+
+
+        //если список пустой возвращаем пустой список rightNotes
+        if (listSearchTopics.size() == 0){
+            rightNotes.clear();
+            return rightNotes;
+        }
 
         //пребор заметок
         for (int rn = 0; rn < rightNotes.size(); rn++) {
@@ -298,6 +292,28 @@ public class NoteDAO {
             }
         }
         return rightNotes;
+    }
+
+    //поиск заметок по дате
+    public List<Note> searchToDateDAO(String idStr){
+        //получение id заметки с выбранной датой
+        Long id = Long.parseLong(idStr);
+        //получение даты
+        Date date = getNoteToId(id).getThisDate();
+        //получение формат даты в котором будем искать заметки
+        SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-dd");
+        //List содержайий заметки с выбранной датой
+        List<Note> notesToSearch = new ArrayList<>();
+        //List содержащий все заметки из BD
+        List allNotes = getAllNotes();
+
+        for(int i=0; i<allNotes.size();i++){
+            Note note = (Note) allNotes.get(i);
+            if(formatter.format(note.getThisDate()).equals(formatter.format(date))) {
+                notesToSearch.add(note);
+            }
+        }
+        return notesToSearch;
     }
 
 }

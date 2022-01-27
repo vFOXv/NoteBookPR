@@ -32,8 +32,13 @@
 
 <!--        создание поля для ввода текста заметки-->
     <br>
-    <p>Text new note<br>
-    <textarea type="text" th:field="*{myText}" cols = "40" rows="3"></textarea> </p>
+    <p>Text new note
+        <br>
+        <label>
+    <textarea type="text" th:field="*{myText}" cols = "40" rows="3"></textarea></label>
+        <div style = "color:red" th:if="${#fields.hasErrors('myText')}" th:errors="*{myText}">
+             Name Error</div>
+    </p>
 
 
 

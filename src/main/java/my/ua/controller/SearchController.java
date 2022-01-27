@@ -29,11 +29,11 @@ public class SearchController {
 
     //ролучение данных с HTML и поиск заметки по дате
     @PostMapping("/date")
-    public String searchToDate(@RequestParam("note_date") String note_date, Model model) {
-        Long id = Long.parseLong(note_date);
-        model.addAttribute("thisNote",noteDAO.getNoteToId(id));
-        return "Action/this_note";
+    public String searchToDate(@RequestParam("note_date") String idStr, Model model) {
+        model.addAttribute("AllNotes",noteDAO.searchToDateDAO(idStr));
+        return "Show/show_all_notes";
     }
+
 
     //переход на страницу поиска заметок по темам и получение списка тем
     @GetMapping("/toTopic")

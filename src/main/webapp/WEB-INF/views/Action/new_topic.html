@@ -8,9 +8,9 @@
 <p><strong>This page for create new topics</strong></p>
 <hr>
 <form action="#" th:action="@{/note/newTopicAdd}" th:object="${newTopic}" th:method="post">
-<p>Name topic:<input type="text" th:field="*{name}" th:value="*{name}"/></p>
+<p>Name topic:<input type="text" th:field="*{name}" th:value="*{name}"/>
     <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
-        Name Error</div>
+        Name Error</div></p>
     <p><input type="submit" value="ADD TOPIC"></p>
 
 </form>

@@ -24,14 +24,7 @@ public class ActionController {
     //показвает конкретную запись в дневнике для просмотра и редакции
     @GetMapping("/{id}")
     public String showThisNote(@PathVariable("id") Long id, Model model) throws SQLException, ClassNotFoundException {
-//        note.setId(noteDAO.getNoteToId(id).getId());
-//        note.setThisDate(noteDAO.getNoteToId(id).getThisDate());
-//        note.setThisDate(noteDAO.getNoteToId(id).getThisDate());
-//        note.setTopics(noteDAO.getNoteToId(id).getTopics());
-//        note.setMyText(noteDAO.getNoteToId(id).getMyText());
-
         model.addAttribute("thisNote",noteDAO.getNoteToId(id));
-
         return "Action/this_note";
     }
 
@@ -74,8 +67,11 @@ public class ActionController {
 
     //получение данных с HTML и запись новой заметки в DB
     @PostMapping("/newNote")
-    public String addNewNote(@ModelAttribute("NewNote") Note newNote) {
+    public String addNewNote(@ModelAttribute("NewNote") @Valid Note newNote, BindingResult bindingResult) {
         newNote.setThisDate(noteDAO.getTodayDate());
+        if(bindingResult.hasErrors()){
+            return "Action/new_note";
+        }
         noteDAO.addNewNoteDAO(newNote);
         System.out.println(newNote);
         return "redirect:/show/all";
