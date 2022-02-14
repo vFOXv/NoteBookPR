@@ -29,7 +29,7 @@ public class Note {
 
     @Column(name = "my_text")
     @NotEmpty(message = "Name should not be empty!!!")
-    @Size(min = 1, max = 255, message = "Name should be between 1 and 255 characters!!!")
+    @Size(min = 5, max = 255, message = "Name should be between 5 and 255 characters!!!")
     private String myText;
 
     public Note() {    }
